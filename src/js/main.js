@@ -5,4 +5,5 @@ import $ from './lib/lib';
 //     $('div').eq(1).toggleClass('active');
 // });
 
-console.log($('div').closest('.ttt'));
+
+$('button').fadeOut(2000);
