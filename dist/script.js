@@ -133,8 +133,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./core */ "./src/js/lib/core.js");
 /* harmony import */ var _modules_display__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/display */ "./src/js/lib/modules/display.js");
 /* harmony import */ var _modules_classes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/classes */ "./src/js/lib/modules/classes.js");
-/* harmony import */ var _modules_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/actions */ "./src/js/lib/modules/actions.js");
-/* harmony import */ var _modules_handlers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/handlers */ "./src/js/lib/modules/handlers.js");
+/* harmony import */ var _modules_handlers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/handlers */ "./src/js/lib/modules/handlers.js");
+/* harmony import */ var _modules_actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/actions */ "./src/js/lib/modules/actions.js");
 /* harmony import */ var _modules_effects__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/effects */ "./src/js/lib/modules/effects.js");
 
 
@@ -285,48 +285,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core */ "./src/js/lib/core.js");
 
 
-_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.addClass = function (...className) {
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.addClass = function (...classNames) {
   for (let i = 0; i < this.length; i++) {
-    this[i].classList.add(...className);
+    this[i].classList.add(...classNames);
   }
 
   return this;
 };
 
-_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.removeClass = function (...className) {
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.removeClass = function (...classNames) {
   for (let i = 0; i < this.length; i++) {
-    this[i].classList.remove(...className);
+    this[i].classList.remove(...classNames);
   }
 
   return this;
 };
 
-_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.toggleClass = function (className) {
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.toggleClass = function (classNames) {
   for (let i = 0; i < this.length; i++) {
-    this[i].classList.toggle(className);
+    this[i].classList.toggle(classNames);
   }
 
   return this;
-};
-
-_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.getAttr = function (name) {
-  if (!name) {
-    return this;
-  }
-
-  for (let i = 0; i < this.length; i++) {
-    return this[i].getAttribute(name);
-  }
-};
-
-_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.setAttr = function (atr, name) {
-  if (!name && !atr) {
-    return this;
-  }
-
-  for (let i = 0; i < this.length; i++) {
-    return this[i].setAttribute(atr, name);
-  }
 };
 
 /***/ }),
@@ -378,8 +358,6 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.toggle = function () {
     } else {
       this[i].style.display = 'none';
     }
-
-    this[i].style.display = '';
   }
 
   return this;
@@ -400,7 +378,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.animateOverTime = function (dur, cb, fin) {
-  let timeStart = null;
+  let timeStart;
 
   function _animateOverTime(time) {
     if (!timeStart) {
@@ -438,10 +416,8 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.fadeIn = function (dur, 
   return this;
 };
 
-_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.fadeOut = function (dur, display, fin) {
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.fadeOut = function (dur, fin) {
   for (let i = 0; i < this.length; i++) {
-    this[i].style.display = display || 'block';
-
     const _fadeOut = complection => {
       this[i].style.opacity = 1 - complection;
 
@@ -452,6 +428,34 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.fadeOut = function (dur,
 
     const ani = this.animateOverTime(dur, _fadeOut, fin);
     requestAnimationFrame(ani);
+  }
+
+  return this;
+};
+
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.fadeToggle = function (dur, display, fin) {
+  for (let i = 0; i < this.length; i++) {
+    if (window.getComputedStyle(this[i]).display === 'none') {
+      this[i].style.display = display || 'block';
+
+      const _fadeIn = complection => {
+        this[i].style.opacity = complection;
+      };
+
+      const ani = this.animateOverTime(dur, _fadeIn, fin);
+      requestAnimationFrame(ani);
+    } else {
+      const _fadeOut = complection => {
+        this[i].style.opacity = 1 - complection;
+
+        if (complection === 1) {
+          this[i].style.display = 'none';
+        }
+      };
+
+      const ani = this.animateOverTime(dur, _fadeOut, fin);
+      requestAnimationFrame(ani);
+    }
   }
 
   return this;
@@ -471,37 +475,37 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core */ "./src/js/lib/core.js");
 
 
-_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.on = function (clickName, func) {
-  if (!clickName || !func) {
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.on = function (eventName, callback) {
+  if (!eventName || !callback) {
     return this;
   }
 
   for (let i = 0; i < this.length; i++) {
-    this[i].addEventListener(clickName, func);
+    this[i].addEventListener(eventName, callback);
   }
 
   return this;
 };
 
-_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.off = function (clickName, func) {
-  if (!clickName || !func) {
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.off = function (eventName, callback) {
+  if (!eventName || !callback) {
     return this;
   }
 
   for (let i = 0; i < this.length; i++) {
-    this[i].removeEventListener(clickName, func);
+    this[i].removeEventListener(eventName, callback);
   }
 
   return this;
 };
 
-_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.click = function (func) {
-  if (func) {
-    for (let i = 0; i < this.length; i++) {
-      this[i].addEventListener('click', func);
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.click = function (handler) {
+  for (let i = 0; i < this.length; i++) {
+    if (handler) {
+      this[i].addEventListener('click', handler);
+    } else {
+      this[i].click();
     }
-  } else {
-    this.click();
   }
 
   return this;
@@ -520,11 +524,15 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.click = function (func) 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib/lib */ "./src/js/lib/lib.js");
 
- // $('button').on('click', function(){
-//     $('div').eq(1).toggleClass('active');
-// });
-
-Object(_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])('button').fadeOut(2000);
+Object(_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])('#first').on('click', () => {
+  Object(_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])('div').eq(1).fadeToggle(800);
+});
+Object(_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])('[data-count="second"]').on('click', () => {
+  Object(_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])('div').eq(2).fadeToggle(800);
+});
+Object(_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])('button').eq(2).on('click', () => {
+  Object(_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])('.w-500').fadeToggle(800);
+});
 
 /***/ })
 
