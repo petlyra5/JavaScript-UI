@@ -1,6 +1,6 @@
 import $ from '../core';
 
-$.prototype.carousel = function() {
+$.prototype.carousel = function(options) {
     for(let i = 0; i < this.length; i++) {
         const width = window.getComputedStyle(this[i].querySelector('.carousel-inner')).width;
         const slides = this[i].querySelectorAll('.carousel-item');
@@ -16,6 +16,7 @@ $.prototype.carousel = function() {
         let offset = 0;
         let slideIndex = 0;
 
+       
         $(this[i].querySelector('[data-slide="next"]')).click((e) => {
             e.preventDefault();
             if (offset == +width.replace(/\D/g, '') * (slides.length - 1)) {
@@ -27,7 +28,7 @@ $.prototype.carousel = function() {
             slidesField.style.transform = `translateX(-${offset}px)`;
 
             if (slideIndex == slides.length - 1) {
-                slideIndex = 0;
+                    slideIndex = 0;
             } else {
                 slideIndex++;
             }
@@ -68,7 +69,13 @@ $.prototype.carousel = function() {
             dots.forEach(dot => dot.classList.remove('active'));
             dots[slideIndex].classList.add('active');
         });
+
+        // setInterval(() => {
+        //     this[i].querySelector('[data-slide="prev"]').click();
+        // }, 2000);
     }
 };
 
-$('.carousel').carousel();
+$('.carousel').carousel({
+    end: true,
+});
